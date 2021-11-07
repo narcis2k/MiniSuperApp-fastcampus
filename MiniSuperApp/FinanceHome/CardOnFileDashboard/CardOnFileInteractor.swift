@@ -19,7 +19,7 @@ protocol CardOnFilePresentable: Presentable {
 }
 
 protocol CardOnFileListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func cardOnFileDidTapAddPaymentMethod()
 }
 
 protocol CardOnfileInteractorDependency {
@@ -61,5 +61,9 @@ final class CardOnFileInteractor: PresentableInteractor<CardOnFilePresentable>, 
         
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
+    }
+    
+    func didTappAddPaymentMethod() {
+        listener?.cardOnFileDidTapAddPaymentMethod()
     }
 }
