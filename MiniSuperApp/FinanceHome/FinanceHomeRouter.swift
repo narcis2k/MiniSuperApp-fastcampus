@@ -1,6 +1,6 @@
 import ModernRIBs
 
-protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileListener, AddPaymentMethodListener {
+protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileDashBoardListener, AddPaymentMethodListener, TopupListener {
   var router: FinanceHomeRouting? { get set }
   var listener: FinanceHomeListener? { get set }
     
@@ -16,20 +16,25 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
     private let superPayDashboardBuildable: SuperPayDashboardBuildable
     private var superPayRouting: Routing?
 
-    private let cardOnFileBuildable: CardOnFileBuildable
+    private let cardOnFileBuildable: CardOnFileDashBoardBuildable
     private var cardOnFileRouting: Routing?
 
     private let addPaymentMethodBuildable: AddPaymentMethodBuildable
     private var addPaymentMethodRouting: Routing?
+    
+    private let topupBuildable: TopupBuildable
+    private var topupRouting: Routing?
 
     init(interactor: FinanceHomeInteractable,
          viewController: FinanceHomeViewControllable,
          superPayDashboardBuildable: SuperPayDashboardBuildable,
-         cardOnFile: CardOnFileBuildable,
-         addPaymentMethodBuildable: AddPaymentMethodBuildable) {
+         cardOnFile: CardOnFileDashBoardBuildable,
+         addPaymentMethodBuildable: AddPaymentMethodBuildable,
+         topupBuildable: TopupBuildable) {
         self.superPayDashboardBuildable = superPayDashboardBuildable
         self.cardOnFileBuildable = cardOnFile
         self.addPaymentMethodBuildable = addPaymentMethodBuildable
+        self.topupBuildable = topupBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -78,5 +83,23 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
         
         detachChild(router)
         addPaymentMethodRouting = nil
+    }
+    
+    func attachTopup() {
+        if topupRouting != nil {
+            return
+        }
+        
+        let router = topupBuildable.build(withListener: interactor)
+        topupRouting = router
+        attachChild(router)
+        
+    }
+    
+    func detachTopup() {
+        guard let router = topupRouting else { return }
+        
+        detachChild(router)
+        topupRouting = nil
     }
 }

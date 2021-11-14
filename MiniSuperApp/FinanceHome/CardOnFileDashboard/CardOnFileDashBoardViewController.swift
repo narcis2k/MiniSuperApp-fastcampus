@@ -8,13 +8,13 @@
 import ModernRIBs
 import UIKit
 
-protocol CardOnFilePresentableListener: AnyObject {
+protocol CardOnFileDashBoardPresentableListener: AnyObject {
     func didTappAddPaymentMethod()
 }
 
-final class CardOnFileViewController: UIViewController, CardOnFilePresentable, CardOnFileViewControllable {
+final class CardOnFileDashBoardViewController: UIViewController, CardOnFileDashBoardPresentable, CardOnFileDashBoardViewControllable {
 
-    weak var listener: CardOnFilePresentableListener?
+    weak var listener: CardOnFileDashBoardPresentableListener?
     
     private let headerStackView: UIStackView = {
         let stackView = UIStackView()

@@ -8,38 +8,38 @@
 import ModernRIBs
 import Combine
 
-protocol CardOnFileRouting: ViewableRouting {
+protocol CardOnFileDashBoardRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
-protocol CardOnFilePresentable: Presentable {
-    var listener: CardOnFilePresentableListener? { get set }
+protocol CardOnFileDashBoardPresentable: Presentable {
+    var listener: CardOnFileDashBoardPresentableListener? { get set }
     
     func update(with models: [PaymentMethodViewModel])
 }
 
-protocol CardOnFileListener: AnyObject {
+protocol CardOnFileDashBoardListener: AnyObject {
     func cardOnFileDidTapAddPaymentMethod()
 }
 
-protocol CardOnfileInteractorDependency {
+protocol CardOnFileDashBoardInteractorDependency {
     var cardsOnFileRepository: CardOnFileRepository { get }
 }
 
-final class CardOnFileInteractor: PresentableInteractor<CardOnFilePresentable>, CardOnFileInteractable, CardOnFilePresentableListener {
+final class CardOnFileDashBoardInteractor: PresentableInteractor<CardOnFileDashBoardPresentable>, CardOnFileDashBoardInteractable, CardOnFileDashBoardPresentableListener {
 
-    weak var router: CardOnFileRouting?
-    weak var listener: CardOnFileListener?
+    weak var router: CardOnFileDashBoardRouting?
+    weak var listener: CardOnFileDashBoardListener?
     
-    private let dependency: CardOnfileInteractorDependency
+    private let dependency: CardOnFileDashBoardInteractorDependency
     
     private var cancellables: Set<AnyCancellable>
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
     init(
-        presenter: CardOnFilePresentable,
-        dependency: CardOnfileInteractorDependency
+        presenter: CardOnFileDashBoardPresentable,
+        dependency: CardOnFileDashBoardInteractorDependency
     ) {
         self.dependency = dependency
         cancellables = .init()
