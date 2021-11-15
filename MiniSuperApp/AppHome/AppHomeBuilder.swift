@@ -1,9 +1,13 @@
 import ModernRIBs
 
-public protocol AppHomeDependency: Dependency {
+protocol AppHomeDependency: Dependency {
+    var cardsOnFileRepository: CardOnFileRepository { get }
+    var superPayRepository: SuperPayRepository { get }
 }
 
 final class AppHomeComponent: Component<AppHomeDependency>, TransportHomeDependency {
+    var cardsOnFileRepository: CardOnFileRepository { dependency.cardsOnFileRepository }
+    var superPayRepository: SuperPayRepository { dependency.superPayRepository }
 }
 
 // MARK: - Builder
@@ -12,9 +16,9 @@ public protocol AppHomeBuildable: Buildable {
   func build(withListener listener: AppHomeListener) -> ViewableRouting
 }
 
-public final class AppHomeBuilder: Builder<AppHomeDependency>, AppHomeBuildable {
+final class AppHomeBuilder: Builder<AppHomeDependency>, AppHomeBuildable {
   
-  public override init(dependency: AppHomeDependency) {
+  override init(dependency: AppHomeDependency) {
     super.init(dependency: dependency)
   }
   

@@ -1,24 +1,20 @@
 import ModernRIBs
 
 protocol FinanceHomeDependency: Dependency {
-  // TODO: Declare the set of dependencies required by this RIB, but cannot be
-  // created by this RIB.
+    var cardsOnFileRepository: CardOnFileRepository { get }
+    var superPayRepository: SuperPayRepository { get }
 }
 
 final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency,
                                   CardOnFileDashBoardDependency, AddPaymentMethodDependency, TopupDependency {
     var topBaseViewController: ViewControllable
     
-    let cardsOnFileRepository: CardOnFileRepository
-    var balance: ReadOnlyCurrentValuePublisher<Double> { balancePublisher }
-    private let balancePublisher: CurrentValuePublisher<Double>
+    var cardsOnFileRepository: CardOnFileRepository { dependency.cardsOnFileRepository }
+    var superPayRepository: SuperPayRepository { dependency.superPayRepository }
+    var balance: ReadOnlyCurrentValuePublisher<Double> { superPayRepository.balance }
     
     init(dependency: FinanceHomeDependency,
-         balance: CurrentValuePublisher<Double>,
-         cardOnFileRepository: CardOnFileRepository,
          topupBaseViewController: ViewControllable) {
-        self.balancePublisher = balance
-        self.cardsOnFileRepository = cardOnFileRepository
         self.topBaseViewController = topupBaseViewController
         super.init(dependency: dependency)
     }
@@ -37,12 +33,9 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
   }
   
   func build(withListener listener: FinanceHomeListener) -> FinanceHomeRouting {
-    let balancePublisher = CurrentValuePublisher<Double>(10000)
     let viewController = FinanceHomeViewController()
 
     let component = FinanceHomeComponent(dependency: dependency,
-                                         balance: balancePublisher,
-                                         cardOnFileRepository: CardOnFileRepositoryImp(),
                                          topupBaseViewController: viewController)
     let interactor = FinanceHomeInteractor(presenter: viewController)
     interactor.listener = listener
